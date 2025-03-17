@@ -40,4 +40,7 @@ To use node_packages as if they were installed globally you can enable `layout n
 
 | Package | Version | nix-package |
 | ------- | ------- | ----------- |
-| go      |         | go_1_22     |
+| go      |         | go_1_24     |
+| go      | 1.22    | go_1_22     |
+| go      | 1.23    | go_1_23     |
+| go      | 1.24    | go_1_24     |
