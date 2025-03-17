@@ -14,7 +14,7 @@
 		in
 		{
 			overlays.default = final: prev: rec {
-        nodejs = final.nodejs_23;
+        nodejs = prev.nodejs_23;
       };
 
 			devShells = forEachSupportedSystem ({ pkgs }: {
