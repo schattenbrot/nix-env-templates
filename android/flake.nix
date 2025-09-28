@@ -31,6 +31,10 @@
             pkgs-cmake.cmake
             ninja
             python3
+            # Additional tools for React Native builds
+            pkg-config
+            nodejs
+            yarn
           ];
           shellHook = ''
             # Set up writable Android SDK directory
@@ -71,7 +75,7 @@
                 "cmake;3.22.1" || true
             fi
             
-            # Patch Android SDK's CMake binaries with NixOS-compatible versions
+            # Patch Android SDK tools with NixOS-compatible versions
             if [ -d "$ANDROID_HOME/cmake/3.22.1/bin" ]; then
               # Create backup of original binaries
               if [ ! -f "$ANDROID_HOME/cmake/3.22.1/bin/cmake.original" ]; then
@@ -82,6 +86,17 @@
               # Replace with NixOS-compatible versions but preserve directory structure
               ln -sf ${pkgs-cmake.cmake}/bin/cmake "$ANDROID_HOME/cmake/3.22.1/bin/cmake" 2>/dev/null || true
               ln -sf ${pkgs.ninja}/bin/ninja "$ANDROID_HOME/cmake/3.22.1/bin/ninja" 2>/dev/null || true
+            fi
+            
+            # Replace AAPT2 with NixOS-compatible version from build-tools
+            if [ -d "$ANDROID_HOME/build-tools/35.0.0" ]; then
+              # Create backup of original AAPT2
+              if [ ! -f "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" ]; then
+                cp "$ANDROID_HOME/build-tools/35.0.0/aapt2" "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" 2>/dev/null || true
+              fi
+              
+              # Use aapt2 from android-tools package which is NixOS-compatible
+              ln -sf ${pkgs.android-tools}/bin/aapt2 "$ANDROID_HOME/build-tools/35.0.0/aapt2" 2>/dev/null || true
             fi
             
             # Create local.properties to override SDK location for Gradle
@@ -95,8 +110,17 @@
               fi
             fi
             
+            # Set environment variables for React Native builds
+            export ANDROID_NDK="$ANDROID_HOME/ndk/27.1.12297006"
+            export ANDROID_NDK_ROOT="$ANDROID_NDK"
+            
+            # Add CMake to PATH for React Native builds 
+            export PATH="${pkgs-cmake.cmake}/bin:$PATH"
+            
             echo "Android SDK installed to: $ANDROID_HOME"
-            echo "Available tools: adb, sdkmanager, avdmanager"
+            echo "Android NDK: $ANDROID_NDK"
+            echo "Using CMake: $(which cmake)"
+            echo "Available tools: adb, sdkmanager, avdmanager, aapt2"
           '';
 				};
 			});
