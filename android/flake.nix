@@ -39,6 +39,7 @@
           shellHook = ''
             # Create a writable Android SDK directory
             export ANDROID_HOME="$HOME/.android-sdk"
+            export ANDROID_SDK_ROOT="$ANDROID_HOME"
             mkdir -p "$ANDROID_HOME"
             
             # Copy SDK contents if not already present
@@ -48,7 +49,15 @@
               chmod -R u+w "$ANDROID_HOME"
             fi
             
+            # Ensure Android tools use our writable SDK
             export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+            
+            # Remove any references to the read-only Nix store SDK
+            unset ANDROID_SDK_HOME
+            
+            # Create local.properties to override SDK location for Gradle
+            echo "Creating local.properties with SDK path..."
+            echo "sdk.dir=$ANDROID_HOME" > local.properties 2>/dev/null || true
           '';
 				};
 			});
