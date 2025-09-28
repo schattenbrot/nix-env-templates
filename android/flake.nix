@@ -35,6 +35,10 @@
             pkg-config
             nodejs
             yarn
+            # Libraries needed for Android SDK tools on NixOS
+            stdenv.cc.cc.lib
+            zlib
+            ncurses5
           ];
           shellHook = ''
             # Set up writable Android SDK directory
@@ -75,6 +79,13 @@
                 "cmake;3.22.1" || true
             fi
             
+            # Force reinstall build-tools if corrupted
+            if [ -f "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" ] || [ ! -f "$ANDROID_HOME/build-tools/35.0.0/aapt2" ]; then
+              echo "Reinstalling Android build-tools..."
+              rm -rf "$ANDROID_HOME/build-tools/35.0.0" 2>/dev/null || true
+              yes | sdkmanager --sdk_root="$ANDROID_HOME" "build-tools;35.0.0" || true
+            fi
+            
             # Patch Android SDK tools with NixOS-compatible versions
             if [ -d "$ANDROID_HOME/cmake/3.22.1/bin" ]; then
               # Create backup of original binaries
@@ -88,15 +99,10 @@
               ln -sf ${pkgs.ninja}/bin/ninja "$ANDROID_HOME/cmake/3.22.1/bin/ninja" 2>/dev/null || true
             fi
             
-            # Replace AAPT2 with NixOS-compatible version from build-tools
-            if [ -d "$ANDROID_HOME/build-tools/35.0.0" ]; then
-              # Create backup of original AAPT2
-              if [ ! -f "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" ]; then
-                cp "$ANDROID_HOME/build-tools/35.0.0/aapt2" "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" 2>/dev/null || true
-              fi
-              
-              # Use aapt2 from android-tools package which is NixOS-compatible
-              ln -sf ${pkgs.android-tools}/bin/aapt2 "$ANDROID_HOME/build-tools/35.0.0/aapt2" 2>/dev/null || true
+            # Restore build-tools if they were corrupted by previous symlinks
+            if [ -f "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" ]; then
+              echo "Restoring original build-tools..."
+              mv "$ANDROID_HOME/build-tools/35.0.0/aapt2.original" "$ANDROID_HOME/build-tools/35.0.0/aapt2" 2>/dev/null || true
             fi
             
             # Create local.properties to override SDK location for Gradle
@@ -116,6 +122,14 @@
             
             # Add CMake to PATH for React Native builds 
             export PATH="${pkgs-cmake.cmake}/bin:$PATH"
+            
+            # Set up dynamic linker for Android SDK tools on NixOS
+            export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.ncurses5}/lib:$LD_LIBRARY_PATH"
+            
+            # Ensure build tools have proper permissions and are not corrupted
+            if [ -d "$ANDROID_HOME/build-tools/35.0.0" ]; then
+              chmod +x "$ANDROID_HOME/build-tools/35.0.0"/* 2>/dev/null || true
+            fi
             
             echo "Android SDK installed to: $ANDROID_HOME"
             echo "Android NDK: $ANDROID_NDK"
