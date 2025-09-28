@@ -1,5 +1,5 @@
 {
-  description = "A flake with Node.js 23";
+  description = "A flake with Node.js 24";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -14,7 +14,7 @@
 		in
 		{
 			overlays.default = final: prev: rec {
-        nodejs = prev.nodejs_23;
+        nodejs = prev.nodejs_24;
       };
 
 			devShells = forEachSupportedSystem ({ pkgs }: {
