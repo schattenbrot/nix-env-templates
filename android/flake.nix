@@ -3,9 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs-cmake.url = "github:nixos/nixpkgs/98bb5b77c8c6666824a4c13d23befa1e07210ef1";
   };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, nixpkgs-cmake }:
 		let
 		  supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
 			forEachSupportedSystem = f: nixpkgs.lib.genAttrs supportedSystems (system: f {
@@ -16,17 +17,18 @@
             android_sdk.accept_license = true;
           };
         };
+        pkgs-cmake = import nixpkgs-cmake { inherit system; };
 			});
 		in
 		{
-			devShells = forEachSupportedSystem ({ pkgs }: {
+			devShells = forEachSupportedSystem ({ pkgs, pkgs-cmake }: {
 				default = pkgs.mkShell {
 					packages = with pkgs; [ 
             android-studio
             android-tools
 						gradle
 						jdk17
-            cmake
+            pkgs-cmake.cmake
             ninja
             python3
           ];
@@ -65,17 +67,21 @@
                 "platform-tools" \
                 "platforms;android-35" \
                 "build-tools;35.0.0" \
-                "ndk;27.1.12297006" || true
+                "ndk;27.1.12297006" \
+                "cmake;3.22.1" || true
             fi
             
-            # Override Android SDK's CMake with Nix-provided CMake for NixOS compatibility
-            if [ -d "$ANDROID_HOME/cmake" ]; then
-              for cmake_dir in "$ANDROID_HOME/cmake"/*; do
-                if [ -d "$cmake_dir/bin" ]; then
-                  ln -sf ${pkgs.cmake}/bin/cmake "$cmake_dir/bin/cmake" 2>/dev/null || true
-                  ln -sf ${pkgs.ninja}/bin/ninja "$cmake_dir/bin/ninja" 2>/dev/null || true
-                fi
-              done
+            # Patch Android SDK's CMake binaries with NixOS-compatible versions
+            if [ -d "$ANDROID_HOME/cmake/3.22.1/bin" ]; then
+              # Create backup of original binaries
+              if [ ! -f "$ANDROID_HOME/cmake/3.22.1/bin/cmake.original" ]; then
+                cp "$ANDROID_HOME/cmake/3.22.1/bin/cmake" "$ANDROID_HOME/cmake/3.22.1/bin/cmake.original" 2>/dev/null || true
+                cp "$ANDROID_HOME/cmake/3.22.1/bin/ninja" "$ANDROID_HOME/cmake/3.22.1/bin/ninja.original" 2>/dev/null || true
+              fi
+              
+              # Replace with NixOS-compatible versions but preserve directory structure
+              ln -sf ${pkgs-cmake.cmake}/bin/cmake "$ANDROID_HOME/cmake/3.22.1/bin/cmake" 2>/dev/null || true
+              ln -sf ${pkgs.ninja}/bin/ninja "$ANDROID_HOME/cmake/3.22.1/bin/ninja" 2>/dev/null || true
             fi
             
             # Create local.properties to override SDK location for Gradle
