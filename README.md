@@ -46,3 +46,9 @@ To use node_packages as if they were installed globally you can enable `layout n
 | go      | 1.23    | go_1_23     |
 | go      | 1.24    | go_1_24     |
 | go      | 1.25    | go_1_25     |
+
+# Android
+
+| Package | Version | nix-packages                  |
+| ------- | ------- | ----------------------------- |
+| android |         | android-studio, android-tools |
