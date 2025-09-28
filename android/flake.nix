@@ -24,6 +24,8 @@
           androidSdk = (pkgs.androidenv.composeAndroidPackages {
             platformVersions = [ "35" ];
             abiVersions = [ "armeabi-v7a" "arm64-v8a" ];
+            ndkVersions = [ "27.1.12297006" ];
+            includeNDK = true;
           }).androidsdk;
         in {
 				default = pkgs.mkShell {
@@ -35,8 +37,18 @@
             androidSdk
           ];
           shellHook = ''
-            export ANDROID_HOME=${androidSdk}/libexec/android-sdk
-            export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+            # Create a writable Android SDK directory
+            export ANDROID_HOME="$HOME/.android-sdk"
+            mkdir -p "$ANDROID_HOME"
+            
+            # Copy SDK contents if not already present
+            if [ ! -d "$ANDROID_HOME/platform-tools" ]; then
+              echo "Setting up Android SDK..."
+              cp -r ${androidSdk}/libexec/android-sdk/* "$ANDROID_HOME/"
+              chmod -R u+w "$ANDROID_HOME"
+            fi
+            
+            export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
           '';
 				};
 			});
