@@ -29,10 +29,11 @@ done
 
 | Package | Version | nix-package |
 | ------- | ------- | ----------- |
-| node    |         | nodejs_23   |
+| node    |         | nodejs_24   |
 | node    | 20      | nodejs_20   |
 | node    | 22      | nodejs_22   |
 | node    | 23      | nodejs_23   |
+| node    | 24      | nodejs_24   |
 
 To use node_packages as if they were installed globally you can enable `layout node` in the .envrc file.
 
@@ -44,3 +45,4 @@ To use node_packages as if they were installed globally you can enable `layout n
 | go      | 1.22    | go_1_22     |
 | go      | 1.23    | go_1_23     |
 | go      | 1.24    | go_1_24     |
+| go      | 1.25    | go_1_25     |
