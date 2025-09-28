@@ -21,9 +21,10 @@
 					packages = with pkgs; [ 
             android-studio
             android-tools
+						gradle
+						jdk21
           ];
 				};
 			});
 		};
 }
-
