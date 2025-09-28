@@ -49,6 +49,6 @@ To use node_packages as if they were installed globally you can enable `layout n
 
 # Android
 
-| Package | Version | nix-packages                  |
-| ------- | ------- | ----------------------------- |
-| android |         | android-studio, android-tools |
+| Package | Version | nix-packages                                 |
+| ------- | ------- | -------------------------------------------- |
+| android |         | android-studio, android-tools, gradle, jdk17 |

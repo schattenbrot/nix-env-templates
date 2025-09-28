@@ -22,7 +22,7 @@
             android-studio
             android-tools
 						gradle
-						jdk21
+						jdk17
           ];
 				};
 			});
