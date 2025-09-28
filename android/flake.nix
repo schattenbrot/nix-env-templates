@@ -26,6 +26,9 @@
             android-tools
 						gradle
 						jdk17
+            cmake
+            ninja
+            python3
           ];
           shellHook = ''
             # Set up writable Android SDK directory
@@ -63,6 +66,16 @@
                 "platforms;android-35" \
                 "build-tools;35.0.0" \
                 "ndk;27.1.12297006" || true
+            fi
+            
+            # Override Android SDK's CMake with Nix-provided CMake for NixOS compatibility
+            if [ -d "$ANDROID_HOME/cmake" ]; then
+              for cmake_dir in "$ANDROID_HOME/cmake"/*; do
+                if [ -d "$cmake_dir/bin" ]; then
+                  ln -sf ${pkgs.cmake}/bin/cmake "$cmake_dir/bin/cmake" 2>/dev/null || true
+                  ln -sf ${pkgs.ninja}/bin/ninja "$cmake_dir/bin/ninja" 2>/dev/null || true
+                fi
+              done
             fi
             
             # Create local.properties to override SDK location for Gradle
