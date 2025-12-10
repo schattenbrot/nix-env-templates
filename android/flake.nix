@@ -89,7 +89,7 @@
             fi
             
             # Add SDK tools to PATH
-            export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+            export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/35.0.0:$PATH"
             
             # Install essential SDK components if not present
             if [ ! -d "$ANDROID_HOME/platforms/android-35" ]; then
