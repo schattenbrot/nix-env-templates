@@ -23,6 +23,7 @@
             packages = with pkgs; [
               go
               gotools
+              air
             ];
           };
         });

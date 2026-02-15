@@ -41,11 +41,14 @@ To use node_packages as if they were installed globally you can enable `layout n
 
 | Package | Version | nix-package |
 | ------- | ------- | ----------- |
-| go      |         | go_1_24     |
+| go      |         | go_1_26     |
 | go      | 1.22    | go_1_22     |
 | go      | 1.23    | go_1_23     |
 | go      | 1.24    | go_1_24     |
 | go      | 1.25    | go_1_25     |
+| go      | 1.26    | go_1_26     |
+
+Go also comes with `air` preinstalled for hot reloading.
 
 # Android
 
