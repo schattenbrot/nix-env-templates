@@ -75,3 +75,9 @@ Go also comes with `air` preinstalled for hot reloading.
 | go-migrate | 4.19.1  | go-migrate  |
 
 Includes `go-migrate` built with all drivers except `snowflake`, which panics on `init()` in Nix environments due to missing CA cert paths.
+
+# sqlc
+
+| Package | Version | nix-package |
+| ------- | ------- | ----------- |
+| sqlc    | v1.30.0 | sqlc        |
