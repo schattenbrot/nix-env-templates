@@ -14,7 +14,32 @@
     devShells = forEachSupportedSystem ({ pkgs }: {
       default = pkgs.mkShell {
         packages = [
-          pkgs.go-migrate
+          (pkgs.go-migrate.overrideAttrs (old: {
+            tags = [
+              "cassandra"
+              "clickhouse"
+              "cockroachdb"
+              "crate"
+              "firebird"
+              "mongodb"
+              "multistmt"
+              "mysql"
+              "neo4j"
+              "pgx"
+              "pgx5"
+              "postgres"
+              "ql"
+              "redshift"
+              "rqlite"
+              "shell"
+              "spanner"
+              "sqlite3"
+              "sqlserver"
+              "stub"
+              "testing"
+              "yugabytedb"
+            ];
+          }))
         ];
       };
     });

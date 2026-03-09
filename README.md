@@ -72,6 +72,6 @@ Go also comes with `air` preinstalled for hot reloading.
 
 | Package    | Version | nix-package |
 | ---------- | ------- | ----------- |
-| go-migrate |         | go-migrate  |
+| go-migrate | 4.19.1  | go-migrate  |
 
-Includes `go-migrate` with all database drivers (postgres, mysql, sqlite3, mongodb, etc.).
+Includes `go-migrate` built with all drivers except `snowflake`, which panics on `init()` in Nix environments due to missing CA cert paths.
