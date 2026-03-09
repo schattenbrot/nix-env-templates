@@ -67,3 +67,11 @@ Go also comes with `air` preinstalled for hot reloading.
 | Package   | Version | nix-package      |
 | --------- | ------- | ---------------- |
 | beekeeper | 5.5.7   | beekeeper-studio |
+
+# Go Migrate
+
+| Package    | Version | nix-package |
+| ---------- | ------- | ----------- |
+| go-migrate |         | go-migrate  |
+
+Includes `go-migrate` with all database drivers (postgres, mysql, sqlite3, mongodb, etc.).
