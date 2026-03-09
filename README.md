@@ -50,8 +50,20 @@ To use node_packages as if they were installed globally you can enable `layout n
 
 Go also comes with `air` preinstalled for hot reloading.
 
+# GNU Make
+
+| Package | Version | nix-package |
+| ------- | ------- | ----------- |
+| gnumake | 4.4.1   | gnumake     |
+
 # Android
 
 | Package | Version | nix-packages                                 |
 | ------- | ------- | -------------------------------------------- |
 | android |         | android-studio, android-tools, gradle, jdk17 |
+
+# Beekeeper
+
+| Package   | Version | nix-package      |
+| --------- | ------- | ---------------- |
+| beekeeper | 5.5.7   | beekeeper-studio |
