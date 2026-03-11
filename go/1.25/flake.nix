@@ -25,6 +25,10 @@
               gotools
               air
             ];
+
+            shellHook = ''
+              export PATH="$HOME/go/bin:$PATH"
+            '';
           };
         });
       };

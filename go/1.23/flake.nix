@@ -24,6 +24,10 @@
               go
               gotools
             ];
+
+            shellHook = ''
+              export PATH="$HOME/go/bin:$PATH"
+            '';
           };
         });
       };
